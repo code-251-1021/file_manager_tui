@@ -16,15 +16,8 @@ A minimal terminal-based file manager written in pure Bash. It uses an event loo
 * h: Show help
 * q: Exit
 
-## Practice Exercises (Code Challenges)
-
-Improve your Bash skills by implementing these features:
-
-1. Toggle hidden files using `shopt -s dotglob` with a dedicated hotkey.
-2. Add safe boundary checks for empty directories (`${#array[@]} -eq 0`).
-3. Display file sizes using `stat` or `wc -c`.
-4. Handle terminal resizing events by trapping `SIGWINCH`.
-5. Add a pagination system to avoid visual overflow when a directory contains many files.
+## Practice Exercises
+This script is good or practicing and improving your bash
 
 ## Usage
 ```bash
