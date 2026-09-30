@@ -1,59 +1,32 @@
-# file_manager.sh
+# Bash TUI File Manager
 
-A simple terminal file manager written in Bash.
-You can browse folders and check file info — no mouse needed.
+A minimal terminal-based file manager written in pure Bash. It uses an event loop and ANSI sequences to navigate directories without external libraries.
 
-## What it does
+## Logic Overview
 
-- Shows all files and folders in the current directory
-- You can move up and down the list with arrow keys
-- Enter a folder by pressing Enter
-- Go back to the parent folder with Backspace
-- Shows read, write, and execute permissions for each item
-- Shows the file extension type
+1. Event Loop: Captures raw keyboard input using `read -srn1` and parses escape sequences for arrow keys.
+2. State Management: Uses indexed arrays to store directory contents and tracks position with a pointer variable.
+3. Safe Globbing: Handles empty folders and filenames with spaces using `shopt -s nullglob` and strict variable quoting.
 
-## How to use
+## Controls
 
-Make the script executable first:
+* Up / Down: Navigate files
+* Enter: Open directory
+* Backspace: Go to parent directory
+* h: Show help
+* q: Exit
+
+## Practice Exercises (Code Challenges)
+
+Improve your Bash skills by implementing these features:
+
+1. Toggle hidden files using `shopt -s dotglob` with a dedicated hotkey.
+2. Add safe boundary checks for empty directories (`${#array[@]} -eq 0`).
+3. Display file sizes using `stat` or `wc -c`.
+4. Handle terminal resizing events by trapping `SIGWINCH`.
+5. Add a pagination system to avoid visual overflow when a directory contains many files.
+
+## Usage
 ```bash
 chmod +x file_manager.sh
-
-Then run it:
-
-bash
 ./file_manager.sh
-
-## Keyboard shortcuts
-
-| Key        | Action                    |
-|------------|---------------------------|
-| ↑ / ↓      | Move up or down the list  |
-| Enter      | Open a folder             |
-| Backspace  | Go to parent folder       |
-| h          | Show help screen          |
-| q          | Quit                      |
-
-## Requirements
-
-- Bash 4.0 or higher
-- A standard Unix terminal (Linux or macOS)
-
-## Known limits
-
-- Hidden files (dotfiles) are not shown
-- Empty folders may cause display issues
-- Backspace key may not work on all systems
-
-## Planned features
-
-- Open and view text files
-- Rename and delete files
-- Create new fil
-- Empty folders may cause display issues
-- Backspace key may not work on all systems
-
-## Planned features
-
-- Open and view text files
-- Rename and delete files
-- Create new file
