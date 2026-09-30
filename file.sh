@@ -85,6 +85,20 @@ permission_file()
 	fi
 
 }
+color_function()
+{
+	local file="$1"
+	local extra="$2"
+	local color="\e[0m"
+
+	if [ -d "$file" ]; then
+		color="\e[1;32m"  
+	elif [ -f "$file" ]; then
+		color="\e[1;34m"  
+	fi
+
+	echo -e "${color}${file}${extra}\e[0m"
+}
 
 while true
 do	
@@ -92,13 +106,16 @@ do
 
 	for n in "${!array[@]}"
 	do
-		if [[ $n -eq $up_down ]];then
+		if [[ $n -eq $up_down ]]; then
 			x=$(permission_file "${array[$up_down]}")
-			echo "[*] "${array[$up_down]}" : $x"
+			y=$(color_function "${array[$up_down]}" " : $x")
+			echo -e "[*] $y"
 		else
-			echo "[-] ${array[$n]}"
+			y=$(color_function "${array[$n]}")
+			echo -e "[-] $y"
 		fi
 	done
+
 
 	read -srn1 key
 	if [[ "$key" == $'\e' ]];then
