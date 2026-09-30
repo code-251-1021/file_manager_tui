@@ -1,4 +1,5 @@
 #!/bin/bash
+trap 'clear; exit 0' INT TERM
 shopt -s nullglob
 array=( * )
 shopt -u nullglob
