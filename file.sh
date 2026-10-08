@@ -68,10 +68,9 @@ permission_file()
 		local x="-*"
 	fi
 	if [ -f "$1" ];then
-		local format=${1##*.}
-		echo "| permissions : $r$w$x | $format file | "
+		echo "| permissions : $r$w$x |"
 	elif [ -d "$1" ];then
-		echo "| permissions : $r$w$x | directory |"
+		echo "| permissions : $r$w$x |"
 	fi
 
 }
@@ -143,7 +142,7 @@ do
 				show_file_command
 				fi
 			;;
-		$'\x7f')
+		$'\x7f' | $'\x08')
 			cd ..;shopt -s nullglob;array=( * );shopt -u nullglob;up_down=0
 			;;
 		"h")
