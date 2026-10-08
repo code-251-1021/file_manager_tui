@@ -7,13 +7,13 @@ shopt -u nullglob
 up_down=0
 show_file_command()
 {
-	printf "\e[H\e[J"
+	clear
 	less "${array[$up_down]}"
 	
 }
 help_command()
 {
-	printf "\e[H\e[J"
+	clear
 	echo -e "
 ███████╗██╗██╗     ███████╗    ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗██████╗ 
 ██╔════╝██║██║     ██╔════╝    ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝██╔══██╗
@@ -94,7 +94,7 @@ color_function()
 
 while true
 do	
-	printf "\e[H\e[J"
+	clear
 
 	for n in "${!array[@]}"
 	do
