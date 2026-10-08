@@ -23,7 +23,6 @@ help_command()
 ╚═╝     ╚═╝╚══════╝╚══════╝    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
 
 USER GUIDE
-[Free Version] [Version : 1.0 ]
 ABOUT
 This is a simple file manager for the terminal.
 It is written from scratch in Bash.
