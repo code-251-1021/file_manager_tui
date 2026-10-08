@@ -1,16 +1,29 @@
 #!/bin/bash
-trap 'clear; exit 0' INT TERM
+trap 'tput cnorm; clear; exit 0' INT TERM
+tput civis
 shopt -s nullglob
 array=( * )
 shopt -u nullglob
 up_down=0
+show_file_command()
+{
+	printf "\e[H\e[J"
+	less "${array[$up_down]}"
+	
+}
 help_command()
 {
-	clear
+	printf "\e[H\e[J"
 	echo -e "
-FILE MANAGER
-USER GUIDE
+███████╗██╗██╗     ███████╗    ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗██████╗ 
+██╔════╝██║██║     ██╔════╝    ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝██╔══██╗
+█████╗  ██║██║     █████╗      ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██████╔╝
+██╔══╝  ██║██║     ██╔══╝      ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██╔══██╗
+██║     ██║███████╗███████╗    ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║  ██║
+╚═╝     ╚═╝╚══════╝╚══════╝    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
 
+USER GUIDE
+[Free Version] [Version : 1.0 ]
 ABOUT
 This is a simple file manager for the terminal.
 It is written from scratch in Bash.
@@ -26,37 +39,15 @@ CURRENT FEATURES
     and permissions
   - Use the keyboard without typing full commands
 
-KEYS
-  Up Arrow       Move the selection up
-  Down Arrow     Move the selection down
-  Enter          Open the selected folder
-  Backspace      Go to the parent folder
-  h              Show this help page
-  q              Quit the file manager
-
-HOW TO USE
-  1. Use the Up and Down Arrow keys to choose an item.
-  2. Press Enter to open a folder.
-  3. Press Backspace to return to the parent folder.
-  4. Press h to read this help page.
-  5. Press q to quit.
-
-PLANNED IDEAS
-The features below are ideas for future versions.
-They are not available unless they have been added to the program.
-
-  - Open a text file and show its contents
-  - Rename a file or folder
-  - Copy or move files
-  - Delete files and folders with a confirmation message
-  - Create a new file or folder
-  - Search for files by name
-  - Show or hide hidden files
-  - Sort items by name, size, or date
-  - Show file size and last change time
-  - Open a file with the system's default program
-  - Ask for confirmation before actions that may remove data
-
+KEYS :
+ | Up Arrow       Move the selection up    |
+ | Down Arrow     Move the selection down  |
+ | Enter          Open the selected folder |
+ | Enter          Cat the selected file    |
+ | Backspace      Go to the parent folder  |
+ | h              Show this help page      |
+ | q              Quit the file manager    |
+ | x              Show hidden file once    |
 "
 	read -srp "Press Enter to return to the file manager : "
 }
@@ -92,9 +83,12 @@ color_function()
 	local color="\e[0m"
 
 	if [ -d "$file" ]; then
-		color="\e[1;32m"  
+		color="\e[1;92m"  
 	elif [ -f "$file" ]; then
-		color="\e[1;34m"  
+		color="\e[1;94m"  
+	fi
+	if [[ "$file" == .* ]]; then
+		color="\e[1;91m"
 	fi
 
 	echo -e "${color}${file}${extra}\e[0m"
@@ -102,14 +96,14 @@ color_function()
 
 while true
 do	
-	clear
+	printf "\e[H\e[J"
 
 	for n in "${!array[@]}"
 	do
 		if [[ $n -eq $up_down ]]; then
 			x=$(permission_file "${array[$up_down]}")
 			y=$(color_function "${array[$up_down]}" " : $x")
-			echo -e "[*] $y"
+			echo -e "[#] $y"
 		else
 			y=$(color_function "${array[$n]}")
 			echo -e "[-] $y"
@@ -133,28 +127,33 @@ do
 				;;
 		esac
 	fi
-	if [ "$key" == "q" ];then
-		clear
-		exit 0
-	fi		
-	if [[ "$key" == "" ]];then
-		if [ -d "${array[$up_down]}" ];then
-			if cd "${array[$up_down]}" 2>/dev/null; then
-    			shopt -s nullglob
-    			array=( * )
-    			shopt -u nullglob
-    			up_down=0
-			fi
+	case "${key,,}" in
+		"q")
+			clear
+			tput cnorm 
+			exit 0
+			;;
+		"")
+			if [ -d "${array[$up_down]}" ];then 
+				if cd "${array[$up_down]}" 2>/dev/null;then 
+					shopt -s nullglob;array=( * )
+					shopt -u nullglob
+					up_down=0
+					fi
+			elif [ -f "${array[$up_down]}" ];then
+				show_file_command
+				fi
+			;;
+		$'\x7f')
+			cd ..;shopt -s nullglob;array=( * );shopt -u nullglob;up_down=0
+			;;
+		"h")
+			help_command
+			;;
+		'x')
+			shopt -s dotglob;array=( * );shopt -u dotglob
+			;;
+		
+	esac
 
-		fi
-	fi
-	if [[ "$key" == $'\x7f' ]];then
-
-		cd ..
-		shopt -s nullglob
-		array=(*)
-		shopt -u nullglob
-		up_down=0
-	fi
-	if [[ "$key" == "h" ]];then help_command;fi
 done
